@@ -1,0 +1,16 @@
+https://4sysops.com/archives/two-ways-to-integrate-github-with-azure-devops/
+https://www.azuredevopslabs.com/labs/vstsextend/github-azurepipelines/
+https://josef.codes/dotnet-pack-include-referenced-projects/
+
+https://fsprojects.github.io/Paket/paket-and-dotnet-cli.html
+
+https://www.pluralsight.com/guides/testing-.net-core-apps-with-visual-studio-code
+
+
+
+
+
+
+https://www.youtube.com/watch?v=vlBuNM6Wzic
+https://www.youtube.com/watch?v=m-ju4JDz4uI
+https://www.youtube.com/watch?v=LUkHRSu3sJU

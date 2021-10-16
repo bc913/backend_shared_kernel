@@ -1,0 +1,115 @@
+trigger:
+  branches:
+    include:
+      - master
+      - develop
+  paths:
+    exclude:
+      - README.md
+pr:
+  branches:
+    include:
+    - master
+    - develop
+    - releases*
+  paths:
+    exclude:
+    - README.md
+  drafts: false
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  isDevelopBranch: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
+  isMasterBranch: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+  commitIdVar: $[variables['Build.SourceVersion']]
+  artifactName: 'BcanBackendSharedKernel'
+  GLOBAL_NUGET_SECRET: $(NugetSecret)
+
+stages:
+- stage: CI
+  displayName: 'CI Stage'
+  jobs: 
+  - job: Build
+    steps:
+          
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore Packages'
+      inputs: 
+        command: restore
+        projects: SharedKernel.sln
+        includeNuGetOrg: true
+        noCache: false
+        verbosityRestore: 'normal'
+    
+    - task: DotNetCoreCLI@2
+      displayName: 'Install NBGV tool'
+      inputs:
+        command: custom
+        custom: tool
+        arguments: install --tool-path . nbgv
+    
+    - script: nbgv get-version
+      displayName: 'Version Info'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Build solution'
+      inputs:
+        command: build
+        projects: SharedKernel.sln
+        arguments: '-c Release --no-restore -v n'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run unit tests'
+      inputs:
+        command: test
+        projects: SharedKernel.sln
+        arguments: '-c Release --no-build --no-restore --collect "XPlat Code coverage" -v n'
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage results'
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: $(Agent.TempDirectory)\**\coverage.cobertura.xml
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Create Nuget Packages'
+      inputs:
+        command: custom
+        custom: pack
+        arguments: '-c Release --no-build --no-restore -o "$(Build.ArtifactStagingDirectory)" -v n'
+    
+    - publish: $(Build.ArtifactStagingDirectory)
+      displayName: 'Publish $(artifactName)'
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+      artifact: '$(artifactName)'
+
+- stage: CD
+  dependsOn: CI
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  displayName: 'CD Stage'
+  jobs:
+    - deployment: publishtonuget
+      displayName: 'Push package to public Nuget feed'
+      environment: NugetPublish
+      strategy: 
+        runOnce: 
+          deploy:
+            steps:
+              - download: current
+                displayName: 'Download $(artifactName) artifact'
+                artifact: '$(artifactName)'
+              
+              - powershell: Get-ChildItem -Path $(Pipeline.Workspace)\$(artifactName)
+                displayName: 'Display directories'
+
+              - task: DotNetCoreCLI@2
+                displayName: 'Deploy to nuget.org'
+                inputs:
+                  command: custom
+                  custom: nuget
+                  arguments: 'push $(Pipeline.Workspace)\$(artifactName)\*.nupkg --api-key $(GLOBAL_NUGET_SECRET) -s "https://api.nuget.org/v3/index.json"' 
+                
+    
+

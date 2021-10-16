@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <!-- <Nullable>enable</Nullable> -->
+    <AssemblyName>Bcan.Backend.SharedKernel</AssemblyName>
+    <RootNamespace>Bcan.Backend.SharedKernel</RootNamespace>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <!-- Nuget package details-->
+  <PropertyGroup>
+    <PackageId>Bcan.Backend.SharedKernel</PackageId>
+    <Title>Bcan.Backend.SharedKernel</Title>
+    <Authors>Burak Can</Authors>    
+    <Description>A shared kernel package to be consumed by various layers in Clean Architected backend projects.</Description>
+    <Summary>A shared kernel package to be consumed by various layers in Clean Architected backend projects.</Summary>
+    <PackageProjectUrl>https://github.com/bc913/backend_shared_kernel</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bc913/backend_shared_kernel</RepositoryUrl>
+    <PackageTags>sharedkernel;cleanarchitecture;cleanarchitectureSharedKernel</PackageTags>
+    <PackageReleaseNotes>Initial pre-release package.</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!-- Include symbol files (*.pdb) in the built .nupkg -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <!-- Source Link setup-->
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <!-- Deterministic build setup (https://github.com/clairernovotny/DeterministicBuilds)-->
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true' OR '$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Switch to Microsoft.SourceLink.AzureRepos.Git if AzureRepos is used to store the repo.-->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

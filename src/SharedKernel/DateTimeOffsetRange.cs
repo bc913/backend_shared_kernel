@@ -30,6 +30,7 @@ namespace Bcan.Backend.SharedKernel
             return (int)Math.Round((End - Start).TotalMinutes, 0);
         }
 
+        #region New
         public DateTimeOffsetRange NewDuration(TimeSpan newDuration)
         {
             return new DateTimeOffsetRange(this.Start, newDuration);
@@ -44,7 +45,9 @@ namespace Bcan.Backend.SharedKernel
         {
             return new DateTimeOffsetRange(newStart, this.End);
         }
+        #endregion
 
+        #region Create
         public static DateTimeOffsetRange CreateOneDayRange(DateTimeOffset day)
         {
             return new DateTimeOffsetRange(day, day.AddDays(1));
@@ -59,6 +62,7 @@ namespace Bcan.Backend.SharedKernel
         {
             return this.Start < dateTimeRange.End && this.End > dateTimeRange.Start;
         }
+        #endregion
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

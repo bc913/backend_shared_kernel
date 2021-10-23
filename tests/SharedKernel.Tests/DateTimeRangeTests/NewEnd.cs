@@ -11,13 +11,14 @@ namespace Bcan.Backend.SharedKernel.Tests.DateTimeRangeTests
         [TestMethod]
         public void ReturnsNewObjectWithGivenEndDate()
         {
-          DateTime newEndTime = DateTimes.TestDateTime.AddHours(2);
-          var dtr = new DateTimeRange(DateTimes.TestDateTime, TimeSpan.FromHours(1));
+            DateTime endTime = DateTimes.TestDateTime;
+            DateTime newEndTime = endTime.AddHours(2);
 
-          var newDtr = dtr.NewEnd(newEndTime);
+            var dtr = new DateTimeRange(endTime, TimeSpan.FromHours(1));
+            var newDtr = dtr.NewEnd(newEndTime);
 
-          dtr.Should().NotBeSameAs(newDtr);
-          newDtr.End.Should().Be(newEndTime);
+            dtr.Should().NotBeSameAs(newDtr);
+            newDtr.End.Should().Be(newEndTime);
         }
     }
 }

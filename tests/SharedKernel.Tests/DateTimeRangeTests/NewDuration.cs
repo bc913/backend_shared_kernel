@@ -11,12 +11,11 @@ namespace Bcan.Backend.SharedKernel.Tests.DateTimeRangeTests
         [TestMethod]
         public void ReturnsNewObjectWithGivenDuration()
         {
-          var dtr = new DateTimeRange(DateTimes.TestDateTime, TimeSpan.FromHours(1));
+            var dtr = new DateTimeRange(DateTimes.TestDateTime, TimeSpan.FromHours(1));
+            var newDtr = dtr.NewDuration(TimeSpan.FromHours(2));
 
-          var newDtr = dtr.NewDuration(TimeSpan.FromHours(2));
-
-          dtr.Should().NotBeSameAs(newDtr);
-          newDtr.DurationInMinutes().Should().Be(120);
+            dtr.Should().NotBeSameAs(newDtr);
+            newDtr.DurationInMinutes().Should().Be(120);
         }
     }
 }

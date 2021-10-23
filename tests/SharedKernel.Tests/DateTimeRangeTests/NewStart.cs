@@ -9,15 +9,16 @@ namespace Bcan.Backend.SharedKernel.Tests.DateTimeRangeTests
     public class NewStart
     {
         [TestMethod]
-        public void ReturnsNewObjectWithGivenEndDate()
+        public void ReturnsNewObjectWithGivenStartDate()
         {
-          DateTime newStartTime = DateTimes.TestDateTime.AddHours(-1);
-          var dtr = new DateTimeRange(DateTimes.TestDateTime, TimeSpan.FromHours(1));
+            DateTime startTime = DateTimes.TestDateTime;
+            DateTime newStartTime = startTime.AddHours(-1);
 
-          var newDtr = dtr.NewStart(newStartTime);
+            var dtr = new DateTimeRange(startTime, TimeSpan.FromHours(1));
+            var newDtr = dtr.NewStart(newStartTime);
 
-          dtr.Should().NotBeSameAs(newDtr);
-          newDtr.Start.Should().Be(newStartTime);
+            dtr.Should().NotBeSameAs(newDtr);
+            newDtr.Start.Should().Be(newStartTime);
         }
     }
 }

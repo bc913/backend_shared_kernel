@@ -1,4 +1,4 @@
-namespace Bcan.Backend.SharedKernel.Interfaces
+namespace Bcan.Backend.SharedKernel.Contracts
 {
     /// <summary>
     /// Apply this marker interface only to aggregate root entities.

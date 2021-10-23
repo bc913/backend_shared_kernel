@@ -57,8 +57,7 @@ namespace Bcan.Backend.SharedKernel
 
         public bool Overlaps(DateTimeOffsetRange dateTimeRange)
         {
-            return this.Start < dateTimeRange.End &&
-            this.End > dateTimeRange.Start;
+            return this.Start < dateTimeRange.End && this.End > dateTimeRange.Start;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

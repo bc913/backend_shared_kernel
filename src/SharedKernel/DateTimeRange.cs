@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Bcan.Backend.SharedKernel
 {
-  public class DateTimeRange : ValueObject
-  {
+    public class DateTimeRange : ValueObject
+    {
         public DateTime Start { get; private set; }
         public DateTime End { get; private set; }
 
@@ -57,8 +57,7 @@ namespace Bcan.Backend.SharedKernel
 
         public bool Overlaps(DateTimeRange dateTimeRange)
         {
-            return this.Start < dateTimeRange.End &&
-                this.End > dateTimeRange.Start;
+            return this.Start < dateTimeRange.End && this.End > dateTimeRange.Start;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

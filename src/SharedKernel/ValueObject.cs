@@ -4,123 +4,60 @@ using System.Linq;
 
 namespace Bcan.Backend.SharedKernel
 {
-    /*
-    Check https://github.com/jhewlett/ValueObject for naive implementation
-    */
-
-    /// <summary>
-    /// See: https://enterprisecraftsmanship.com/posts/value-object-better-implementation/
-    /// </summary>
-    [Serializable]
-    public abstract class ValueObject : IComparable, IComparable<ValueObject>
+    public abstract class ValueObject : IEquatable<ValueObject>
     {
-        private int? _cachedHashCode;
-
         protected abstract IEnumerable<object> GetEqualityComponents();
 
+        #region IEquatable
         public override bool Equals(object obj)
         {
-        if (obj == null)
-            return false;
-
-        if (GetUnproxiedType(this) != GetUnproxiedType(obj))
-            return false;
-
-        var valueObject = (ValueObject)obj;
-
-        return GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());
+            return obj is ValueObject vo && base.Equals(vo);
         }
+        public bool Equals(ValueObject other)
+        {
+            if(other is null)
+                return false;
+            
+            if(ReferenceEquals(this, other))
+                return true;
 
+            return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());            
+        }
         public override int GetHashCode()
         {
-        if (!_cachedHashCode.HasValue)
-        {
-            _cachedHashCode = GetEqualityComponents()
+            // https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/implement-value-objects
+            /*
+             return GetEqualityComponents()
+                .Select(x => x != null ? x.GetHashCode() : 0)
+                .Aggregate((x, y) => x ^ y);
+            */
+            return GetEqualityComponents()
                 .Aggregate(1, (current, obj) =>
                 {
-                unchecked
-                {
-                    return current * 23 + (obj?.GetHashCode() ?? 0);
-                }
+                    unchecked
+                    {
+                        return current * 23 + (obj?.GetHashCode() ?? 0);
+                    }
                 });
         }
 
-        return _cachedHashCode.Value;
+        public static bool operator==(ValueObject lhs, ValueObject rhs)
+        {
+            if(lhs is null)
+                return rhs is null;
+
+            return lhs.Equals(rhs);
         }
 
-        public int CompareTo(object obj)
+        public static bool operator!=(ValueObject lhs, ValueObject rhs)
         {
-            Type thisType = GetUnproxiedType(this);
-            Type otherType = GetUnproxiedType(obj);
-
-            if (thisType != otherType)
-                return string.Compare(thisType.ToString(), otherType.ToString(), StringComparison.Ordinal);
-
-            var other = (ValueObject)obj;
-
-            object[] components = GetEqualityComponents().ToArray();
-            object[] otherComponents = other.GetEqualityComponents().ToArray();
-
-            for (int i = 0; i < components.Length; i++)
-            {
-                int comparison = CompareComponents(components[i], otherComponents[i]);
-                if (comparison != 0)
-                return comparison;
-            }
-
-            return 0;
+            return !(lhs == rhs);
         }
+        #endregion
 
-        private int CompareComponents(object object1, object object2)
+        public ValueObject ShallowCopy()
         {
-            if (object1 is null && object2 is null)
-                return 0;
-
-            if (object1 is null)
-                return -1;
-
-            if (object2 is null)
-                return 1;
-
-            if (object1 is IComparable comparable1 && object2 is IComparable comparable2)
-                return comparable1.CompareTo(comparable2);
-
-            return object1.Equals(object2) ? 0 : -1;
-            }
-
-            public int CompareTo(ValueObject other)
-            {
-            return CompareTo(other as object);
-            }
-
-            public static bool operator ==(ValueObject a, ValueObject b)
-            {
-            if (a is null && b is null)
-                return true;
-
-            if (a is null || b is null)
-                return false;
-
-            return a.Equals(b);
-        }
-
-        public static bool operator !=(ValueObject a, ValueObject b)
-        {
-            return !(a == b);
-        }
-
-        internal static Type GetUnproxiedType(object obj)
-        {
-            const string EFCoreProxyPrefix = "Castle.Proxies.";
-            const string NHibernateProxyPostfix = "Proxy";
-
-            Type type = obj.GetType();
-            string typeString = type.ToString();
-
-            if (typeString.Contains(EFCoreProxyPrefix) || typeString.EndsWith(NHibernateProxyPostfix))
-                return type.BaseType;
-
-            return type;
+            return this.MemberwiseClone() as ValueObject;
         }
     }
 }

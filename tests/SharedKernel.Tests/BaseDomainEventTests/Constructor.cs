@@ -5,7 +5,7 @@ using FluentAssertions.Extensions;
 
 namespace Bcan.Backend.SharedKernel.Tests.BaseDomainEventTests
 {
-    public class EventMock : BaseDomainEvent { }
+    public class EventMock : DomainEvent { }
 
     [TestClass]
     public class Constructor

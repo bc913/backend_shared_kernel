@@ -5,4 +5,10 @@ namespace Bcan.Backend.SharedKernel.Contracts
     /// Repositories will only work with aggregate roots, not their children
     /// </summary>
     public interface IAggregateRoot {}
+
+    /// <inheritdoc />
+    public interface IAggregateRootWithId<TypeId> : IAggregateRoot
+    {
+        TypeId Id { get; }
+    }
 }

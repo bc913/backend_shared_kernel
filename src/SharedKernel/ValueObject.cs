@@ -9,10 +9,12 @@ namespace Bcan.Backend.SharedKernel
         protected abstract IEnumerable<object> GetEqualityComponents();
 
         #region IEquatable
+
         public override bool Equals(object obj)
         {
-            return obj is ValueObject vo && base.Equals(vo);
+            return obj is ValueObject vo && Equals(vo);
         }
+
         public bool Equals(ValueObject other)
         {
             if(other is null)
@@ -23,6 +25,7 @@ namespace Bcan.Backend.SharedKernel
 
             return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());            
         }
+        
         public override int GetHashCode()
         {
             // https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/implement-value-objects
@@ -53,6 +56,7 @@ namespace Bcan.Backend.SharedKernel
         {
             return !(lhs == rhs);
         }
+
         #endregion
 
         public ValueObject ShallowCopy()

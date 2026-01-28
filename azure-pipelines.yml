@@ -11,7 +11,7 @@ pr:
     include:
     - master
     - develop
-    - releases*
+    - release/*
   paths:
     exclude:
     - README.md
@@ -33,6 +33,12 @@ stages:
   jobs: 
   - job: Build
     steps:
+
+    - task: UseDotNet@2
+      displayName: 'Install .NET 9 SDK'
+      inputs:
+        packageType: 'sdk'
+        version: '9.0.200'
           
     - task: DotNetCoreCLI@2
       displayName: 'Restore Packages'
@@ -43,15 +49,15 @@ stages:
         noCache: false
         verbosityRestore: 'normal'
     
-    - task: DotNetCoreCLI@2
-      displayName: 'Install NBGV tool'
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install --tool-path . nbgv
+    # - task: DotNetCoreCLI@2
+    #   displayName: 'Install NBGV tool'
+    #   inputs:
+    #     command: custom
+    #     custom: tool
+    #     arguments: install --tool-path . nbgv
     
-    - script: nbgv get-version
-      displayName: 'Version Info'
+    # - script: nbgv get-version
+    #   displayName: 'Version Info'
 
     - task: DotNetCoreCLI@2
       displayName: 'Build solution'

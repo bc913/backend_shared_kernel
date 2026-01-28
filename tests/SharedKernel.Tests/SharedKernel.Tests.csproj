@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
-    <!-- <Nullable>enable</Nullable> -->
+    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
     <AssemblyName>Bcan.Backend.SharedKernel.Tests</AssemblyName>
     <RootNamespace>Bcan.Backend.SharedKernel.Tests</RootNamespace>
   </PropertyGroup>

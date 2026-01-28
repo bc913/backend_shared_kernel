@@ -1,31 +1,15 @@
-using System.Collections.Generic;
+using System;
 
 namespace Bcan.Backend.SharedKernel
 {
-    public abstract class Entity<IdType> : BaseEntity<IdType>, Contracts.IHasDomainEvents
+    public abstract class Entity : HasDomainEventsBase
     {
-        public Entity(IdType id) : base(id) {}
+        public int Id { get; set; }
+    }
 
-        #region Fields & Properties
-        private List<DomainEvent> _domainEvents;
-        public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
-
-        #endregion
-
-        public void AddDomainEvent(DomainEvent eventObj)
-        {
-            _domainEvents = _domainEvents ?? new List<DomainEvent>();
-            _domainEvents.Add(eventObj);
-        }
-
-        public void RemoveDomainEvent(DomainEvent eventObj)
-        {
-            _domainEvents?.Remove(eventObj);
-        }
-
-        public void ClearDomainEvents()
-        {
-            _domainEvents?.Clear();
-        }
+    public abstract class Entity<IdType> : HasDomainEventsBase
+        where IdType : struct, IEquatable<IdType>
+    {
+        public IdType Id { get; set; } = default!;
     }
 }

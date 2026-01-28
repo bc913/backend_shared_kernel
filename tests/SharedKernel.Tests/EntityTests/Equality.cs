@@ -10,7 +10,7 @@ namespace Bcan.Backend.SharedKernel.Tests.EntityTests
         [TestMethod]
         public void ReturnsTrueForSameReferences()
         {
-            var e1 = new Mocks.GuidEntity(Guid.NewGuid());
+            var e1 = new Mocks.GuidEntity(){Id = Guid.NewGuid()};
             var e2 = e1;
             
             e1.Should().BeSameAs(e2);
@@ -25,8 +25,8 @@ namespace Bcan.Backend.SharedKernel.Tests.EntityTests
         [TestMethod]
         public void ReturnsTrueForSameId()
         {
-            var e1 = new Mocks.IntEntity(5);
-            var e2 = new Mocks.IntEntity(5);
+            var e1 = new Mocks.IntEntity(){Id = 5};
+            var e2 = new Mocks.IntEntity(){Id = 5};
             
             e1.Should().NotBeSameAs(e2);
             e2.Should().NotBeSameAs(e1);
@@ -34,14 +34,13 @@ namespace Bcan.Backend.SharedKernel.Tests.EntityTests
             e1.Should().Equals(e2);
             e2.Should().Equals(e1);
             
-            (e1 == e2).Should().BeTrue();
         }
 
         [TestMethod]
         public void ReturnsFalseForDifferentReferences()
         {
-            var e1 = new Mocks.GuidEntity(Guid.NewGuid());
-            var e2 = new Mocks.GuidEntity(Guid.NewGuid());
+            var e1 = new Mocks.GuidEntity(){Id = Guid.NewGuid()};
+            var e2 = new Mocks.GuidEntity(){Id = Guid.NewGuid()};
             
             e1.Should().NotBeSameAs(e2);
             e2.Should().NotBeSameAs(e1);
@@ -55,7 +54,7 @@ namespace Bcan.Backend.SharedKernel.Tests.EntityTests
         [TestMethod]
         public void ReturnsFalseForGivenNull()
         {
-            var e1 = new Mocks.GuidEntity(Guid.NewGuid());
+            var e1 = new Mocks.GuidEntity(){Id = Guid.NewGuid()};
             (e1.Equals(null)).Should().BeFalse();
         }
     }

@@ -11,7 +11,7 @@ pr:
     include:
     - master
     - develop
-    - releases*
+    - release/*
   paths:
     exclude:
     - README.md

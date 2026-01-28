@@ -10,29 +10,31 @@ namespace Bcan.Backend.SharedKernel.Tests.EntityTests
         [TestMethod]
         public void SucceedsForValidGuid()
         {
-            var e = new Mocks.GuidEntity(Guid.NewGuid());
+            var e = new Mocks.GuidEntity(){Id = Guid.NewGuid()};
             e.Should().NotBeNull();
         }
 
         [TestMethod]
         public void SucceedsForValidInt()
         {
-            var e = new Mocks.IntEntity(4);
+            var e = new Mocks.IntEntity(){Id = 4};
             e.Should().NotBeNull();
         }
 
         [TestMethod]
-        public void ThrowsForDefaultValuedGuid()
+        public void DefaultGuidCtor_ShouldGenerate_DefaultId()
         {
-            Action act = () => new Mocks.GuidEntity(Guid.Empty);
-            act.Should().ThrowExactly<ArgumentException>();
+            var e = new Mocks.GuidEntity();
+            e.Should().NotBeNull();
+            e.Id.Should().Be(Guid.Empty);
         }
 
         [TestMethod]
-        public void ThrowsForDefaultValuedIntId()
+        public void DefaultIntCtor_ShouldGenerate_DefaultId()
         {
-            Action act = () => new Mocks.IntEntity(default(int));
-            act.Should().ThrowExactly<ArgumentException>();
+            var e = new Mocks.IntEntity();
+            e.Should().NotBeNull();
+            e.Id.Should().Be(default(int));
         }
     }
 }
